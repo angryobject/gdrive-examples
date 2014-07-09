@@ -9,8 +9,8 @@ module.exports = function (app) {
 	// setup authorization callback route
 	oauth.route(app);
 
-	// upload
-	app.use('/upload', function (req, res) {
+	// drive apis
+	app.use('/drive', function (req, res) {
 
 		if (req.method === 'POST') {
 			oauth.authenticate(req,res, function (err, res, auth) {
