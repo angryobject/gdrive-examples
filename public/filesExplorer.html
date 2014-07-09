@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Drive Examples - Files Explorer</title>
+    <style>
+		label {
+			display: block;
+			padding: 5px;
+			margin: 10px;
+		}
+		input, textarea {
+			display: block;
+		}
+		input[type="text"], textarea {
+			width: 350px;
+			max-width: 100%;
+		}
+		textarea {
+			min-height: 100px;
+		}
+	</style>
+</head>
+<body>
+
+    <h1>Files Explorer</h1>
+
+    <h2>Create a file</h2>
+
+    <form id="form-create" action="/drive" method="POST">
+        <label>
+            File Name:
+            <input type="text" name="fileName" value="My file.txt">
+        </label>
+        <label>
+            File Contents:
+            <textarea name="fileContent">Put in some text!</textarea>
+        </label>
+        <input type="submit" name="createFile" value="Create a file on my Drive!">
+    </form>
+
+</body>
+</html>
