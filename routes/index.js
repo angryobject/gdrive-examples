@@ -39,6 +39,16 @@ module.exports = function (app) {
             });
         }
 
+        function get(res, auth) {
+            gdrive.get(auth, req.query.fileId, function (err, result) {
+                if (err) {
+                    res.end('Could not retrieve file data.');
+                } else {
+                    res.end(JSON.stringify(result, null, '\t'));
+                }
+            });
+        }
+
         oauth.authenticate(req,res, function (err, res, auth) {
             if (err) {
                 res.end('Could not authenticate.')
@@ -46,7 +56,11 @@ module.exports = function (app) {
                 if (req.method === 'POST') {
                     upload(res, auth);
                 } else {
-                    list(res, auth);
+                	if (req.query.fileId) {
+                		get(res, auth);
+                	} else {
+                		list(res, auth);
+                	}
                 }
             }
         });

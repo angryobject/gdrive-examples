@@ -33,5 +33,21 @@ function list(auth, callback) {
 
 }
 
+function get(auth, fid, callback) {
+
+    googleapis.discover('drive', 'v2').execute(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.files
+                .get({fileId: fid})
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
 module.exports.upload = upload;
 module.exports.list = list;
+module.exports.get = get;
