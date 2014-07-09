@@ -18,4 +18,20 @@ function upload(auth, file, callback) {
 
 }
 
+function list(auth, callback) {
+
+    googleapis.discover('drive', 'v2').execute(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.files
+                .list({q: 'trashed = false'})
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
 module.exports.upload = upload;
+module.exports.list = list;
