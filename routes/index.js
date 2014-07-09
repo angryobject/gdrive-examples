@@ -28,7 +28,7 @@ module.exports = function (app) {
 						if (err) {
 							res.end('Could not upload file.');
 						} else {
-							res.end('File \' ' + title + '\' successfuly uploaded.');
+							res.end(JSON.stringify(result, null, '\t'));
 						}
 					});
 				}
