@@ -49,7 +49,7 @@ module.exports = function (app) {
             });
         }
 
-        oauth.authenticate(req,res, function (err, res, auth) {
+        oauth.authenticate(req, res, function (err, res, auth) {
             if (err) {
                 res.end('Could not authenticate.')
             } else {
@@ -66,6 +66,30 @@ module.exports = function (app) {
         });
 
 	});
+
+	// download file
+	app.use('/download', function (req, res) {
+
+		if (req.query.fileId) {
+			oauth.authenticate(req, res, function (err, res, auth) {
+	            if (err) {
+	                res.end('Could not authenticate.');
+	            } else {
+	               gdrive.download(auth, req.query.fileId, function (err, result) {
+		                if (err) {
+		                    res.end('Could not download the file.');
+		                } else {
+		                    result.pipe(res);
+		                }
+		            });
+	            }
+	        });
+		} else {
+			res.end('No fileId specified.');
+		}
+
+	});
+
 
 
 	// 404
