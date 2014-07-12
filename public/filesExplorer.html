@@ -24,7 +24,7 @@
 
     <h1>Files Explorer</h1>
 
-    <h2>Create a file</h2>
+    <h2>Create/Update a file</h2>
 
     <form id="form-create" action="/drive" method="POST">
         <label>
@@ -35,7 +35,11 @@
             File Contents:
             <textarea name="fileContent">Put in some text!</textarea>
         </label>
-        <input type="submit" name="createFile" value="Create a file on my Drive!">
+        <label>
+            File ID (to update a file):
+            <input type="text" name="fileId">
+        </label>
+        <input type="submit" name="createFile" value="Create/Update a file on my Drive!">
     </form>
 
     <h2>List files</h2>

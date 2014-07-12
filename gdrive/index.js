@@ -99,8 +99,29 @@ function share(auth, fid, permissions, callback) {
 
 }
 
+function update(auth, meta, body, callback) {
+
+    discover(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            var update = client.drive.files
+                .update({fileId: meta.id}, meta)
+                .withAuthClient(auth);
+
+            if (body) {
+                update.withMedia(meta.mimeType, body);
+            }
+
+            update.execute(callback);
+        }
+    });
+
+}
+
 module.exports.upload = upload;
 module.exports.list = list;
 module.exports.get = get;
 module.exports.download = download;
 module.exports.share = share;
+module.exports.update = update;

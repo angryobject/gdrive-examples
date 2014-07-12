@@ -29,6 +29,23 @@ module.exports = function (app) {
             });
         }
 
+        function update(res, auth) {
+            var meta = {
+                id: req.body.fileId,
+                mimeType: 'text/plain',
+                title: req.body.fileName || null
+            };
+            var content = req.body.fileContent;
+
+            gdrive.update(auth, meta, content, function (err, result) {
+                if (err) {
+                    res.end('Could not update file.');
+                } else {
+                    res.end(JSON.stringify(result, null, '\t'));
+                }
+            });
+        }
+
         function list(res, auth) {
             gdrive.list(auth, function (err, result) {
                 if (err) {
@@ -54,7 +71,11 @@ module.exports = function (app) {
                 res.end('Could not authenticate.')
             } else {
                 if (req.method === 'POST') {
-                    upload(res, auth);
+                    if (req.body.fileId) {
+                        update(res, auth);
+                    } else {
+                        upload(res, auth);
+                    }
                 } else {
                 	if (req.query.fileId) {
                 		get(res, auth);
