@@ -166,7 +166,60 @@ module.exports = function (app) {
 
     });
 
+    // custom file properties
+    app.use('/properties', function (req, res) {
 
+        // Udating, delting, getting property by key are
+        // analogous to the same operations on files
+        // and not present here.
+
+        // Btw, to update a property you can just set it again
+        // with a different value.
+
+        function list(res, auth) {
+            gdrive.listProperties(auth, fid, function (err, result) {
+                if (err) {
+                    res.end('Could not retrieve custom file properties.');
+                } else {
+                    res.end(JSON.stringify(result, null, '\t'));
+                }
+            });
+        }
+
+        function set(res, auth) {
+            var property = {
+                key: req.body.key,
+                value: req.body.value
+            };
+
+            gdrive.setProperty(auth, fid, property, function (err, result) {
+                if (err) {
+                    res.end('Could not set custom property on file.');
+                } else {
+                    res.end(JSON.stringify(result, null, '\t'));
+                }
+            });
+        }
+
+        var fid = req.query.fileId || req.body.fileId;
+
+        if (fid) {
+            oauth.authenticate(req, res, function (err, res, auth) {
+                if (err) {
+                    res.end('Could not authenticate.');
+                } else {
+                    if (req.method === 'POST') {
+                        set(res, auth);
+                    } else {
+                        list(res, auth);
+                    }
+                }
+            });
+        } else {
+            res.end('No fileId specified.');
+        }
+
+    });
 
 	// 404
 	app.use(function (req, res) {

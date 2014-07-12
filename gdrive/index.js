@@ -164,6 +164,36 @@ function untrash(auth, fid, callback) {
 
 }
 
+function setProperty(auth, fid, property, callback) {
+
+    discover(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.properties
+                .insert({fileId: fid}, property)
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
+function listProperties(auth, fid, callback) {
+
+    discover(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.properties
+                .list({fileId: fid})
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
 module.exports.upload = upload;
 module.exports.list = list;
 module.exports.get = get;
@@ -173,3 +203,5 @@ module.exports.update = update;
 module.exports.erase = erase;
 module.exports.trash = trash;
 module.exports.untrash = untrash;
+module.exports.setProperty = setProperty;
+module.exports.listProperties = listProperties;

@@ -115,5 +115,33 @@
         <input type="submit" name="removeFile" value="Remove a file on my Drive!">
     </form>
 
+    <h2>Add custom properties to a file</h2>
+
+    <form id="form-properties" action="/properties" method="POST">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Key:
+            <input type="text" name="key">
+        </label>
+        <label>
+            Value:
+            <input type="text" name="value">
+        </label>
+        <input type="submit" name="addProperty" value="Add custom ptoperty">
+    </form>
+
+    <h2>List custom properties on a file</h2>
+
+    <form id="form-properties" action="/properties" method="GET">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <input type="submit" name="listProperties" value="List custom ptoperties">
+    </form>
+
 </body>
 </html>
