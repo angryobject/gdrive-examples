@@ -7,15 +7,15 @@ function discover(callback) {
     googleapis.discover('drive', 'v2').execute(callback);
 }
 
-function upload(auth, file, callback) {
+function upload(auth, meta, content, callback) {
 
     discover(function (err, client) {
         if (err) {
             callback(err);
         } else {
             client.drive.files
-                .insert({ title: file.title, mimeType: file.mime })
-                .withMedia(file.mime, file.content)
+                .insert(meta)
+                .withMedia(meta.mimeType, content)
                 .withAuthClient(auth)
                 .execute(callback);
         }

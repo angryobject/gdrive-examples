@@ -13,14 +13,13 @@ module.exports = function (app) {
 	app.use('/drive', function (req, res) {
 
 		function upload(res, auth) {
-            var title = req.body.fileName;
+            var meta = {
+                title: req.body.fileName,
+                mimeType: 'text/plain'
+            };
             var content = req.body.fileContent;
 
-            gdrive.upload(auth, {
-                title: title,
-                mime: 'text/plain',
-                content: content,
-            }, function (err, result) {
+            gdrive.upload(auth, meta, content, function (err, result) {
                 if (err) {
                     res.end('Could not upload file.');
                 } else {
