@@ -3,9 +3,13 @@
 var googleapis = require('googleapis');
 var request = require('request');
 
+function discover(callback) {
+    googleapis.discover('drive', 'v2').execute(callback);
+}
+
 function upload(auth, file, callback) {
 
-    googleapis.discover('drive', 'v2').execute(function (err, client) {
+    discover(function (err, client) {
         if (err) {
             callback(err);
         } else {
@@ -21,7 +25,7 @@ function upload(auth, file, callback) {
 
 function list(auth, callback) {
 
-    googleapis.discover('drive', 'v2').execute(function (err, client) {
+    discover(function (err, client) {
         if (err) {
             callback(err);
         } else {
@@ -36,7 +40,7 @@ function list(auth, callback) {
 
 function get(auth, fid, callback) {
 
-    googleapis.discover('drive', 'v2').execute(function (err, client) {
+    discover(function (err, client) {
         if (err) {
             callback(err);
         } else {
