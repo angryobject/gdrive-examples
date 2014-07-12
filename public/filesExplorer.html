@@ -8,7 +8,7 @@
 			padding: 5px;
 			margin: 10px;
 		}
-		input, textarea {
+		input, textarea, select {
 			display: block;
 		}
 		input[type="text"], textarea {
@@ -60,6 +60,37 @@
             <input type="text" name="fileId">
         </label>
         <input type="submit" name="downloadFile" value="Download a file on my Drive!">
+    </form>
+
+    <h2>Share file by ID</h2>
+
+    <form id="form-share" action="/share" method="GET">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Type:
+            <select name="type">
+                <option value="user">user</option>
+                <option value="group">group</option>
+                <option value="domain">domain</option>
+                <option value="anyone">anyone</option>
+            </select>
+        </label>
+        <label>
+            Role:
+            <select name="role">
+                <option value="reader">reader</option>
+                <option value="writer">writer</option>
+                <option value="owner">owner</option>
+            </select>
+        </label>
+        <label>
+            Value(email/group email/blank for anyone):
+            <input type="text" name="value">
+        </label>
+        <input type="submit" name="shareFile" value="Share a file on my Drive!">
     </form>
 
 </body>

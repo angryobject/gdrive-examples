@@ -90,6 +90,36 @@ module.exports = function (app) {
 
 	});
 
+    // share file
+    app.use('/share', function (req, res) {
+
+        var fid = req.query.fileId;
+        var permissions = {
+            type: req.query.type,
+            role: req.query.role,
+            value: req.query.value
+        };
+
+        if (fid) {
+            oauth.authenticate(req, res, function (err, res, auth) {
+                if (err) {
+                    res.end('Could not authenticate.');
+                } else {
+                   gdrive.share(auth, fid, permissions, function (err, result) {
+                        if (err) {
+                            res.end('Could not share the file.');
+                        } else {
+                            res.end(JSON.stringify(result, null, '\t'));
+                        }
+                    });
+                }
+            });
+        } else {
+            res.end('No fileId specified.');
+        }
+
+    });
+
 
 
 	// 404

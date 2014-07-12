@@ -84,7 +84,23 @@ function download(auth, fid, callback) {
 
 }
 
+function share(auth, fid, permissions, callback) {
+
+    discover(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.permissions
+                .insert({fileId: fid}, permissions)
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
 module.exports.upload = upload;
 module.exports.list = list;
 module.exports.get = get;
 module.exports.download = download;
+module.exports.share = share;
