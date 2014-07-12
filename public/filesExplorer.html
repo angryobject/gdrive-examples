@@ -97,5 +97,23 @@
         <input type="submit" name="shareFile" value="Share a file on my Drive!">
     </form>
 
+    <h2>Trash/Untrash/Delete file by ID</h2>
+
+    <form id="form-remove" action="/drive" method="POST">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Action:
+            <select name="action">
+                <option value="trash">trash</option>
+                <option value="untrash">untrash</option>
+                <option value="erase">erase</option>
+            </select>
+        </label>
+        <input type="submit" name="removeFile" value="Remove a file on my Drive!">
+    </form>
+
 </body>
 </html>

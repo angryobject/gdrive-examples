@@ -119,9 +119,57 @@ function update(auth, meta, body, callback) {
 
 }
 
+function erase(auth, fid, callback) {
+
+    discover(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.files
+                .delete({fileId: fid})
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
+function trash(auth, fid, callback) {
+
+    discover(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.files
+                .trash({fileId: fid})
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
+function untrash(auth, fid, callback) {
+
+    discover(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.files
+                .untrash({fileId: fid})
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
 module.exports.upload = upload;
 module.exports.list = list;
 module.exports.get = get;
 module.exports.download = download;
 module.exports.share = share;
 module.exports.update = update;
+module.exports.erase = erase;
+module.exports.trash = trash;
+module.exports.untrash = untrash;

@@ -45,6 +45,28 @@ module.exports = function (app) {
             });
         }
 
+        function remove(res, auth) {
+            var methods = ['trash', 'untrash', 'erase'];
+            var method = methods.indexOf(req.body.action) > -1 ? req.body.action : null;
+
+            if (!method) {
+                res.end('Unknown action.');
+            } else {
+                gdrive[method](auth, req.body.fileId, function (err, result) {
+                    if (err) {
+                        res.end('Could not ' + method + ' file.');
+                    } else {
+                        if (method === 'erase') {
+                            res.end('File was successfully deleted.')
+                        } else {
+                            res.end(JSON.stringify(result, null, '\t'));
+                        }
+
+                    }
+                });
+            }
+        }
+
         function list(res, auth) {
             gdrive.list(auth, function (err, result) {
                 if (err) {
@@ -70,10 +92,14 @@ module.exports = function (app) {
                 res.end('Could not authenticate.')
             } else {
                 if (req.method === 'POST') {
-                    if (req.body.fileId) {
-                        update(res, auth);
+                    if (req.body.hasOwnProperty('removeFile')) {
+                        remove(res, auth);
                     } else {
-                        upload(res, auth);
+                        if (req.body.fileId) {
+                            update(res, auth);
+                        } else {
+                            upload(res, auth);
+                        }
                     }
                 } else {
                 	if (req.query.fileId) {
