@@ -6,7 +6,9 @@ var REDIRECT_URL = process.env.REDIRECT_URL;
 var SCOPES = [
     'https://www.googleapis.com/auth/drive.file',
     // to store app-specific files that user should not see:
-    // 'https://www.googleapis.com/auth/drive.appdata'
+    // 'https://www.googleapis.com/auth/drive.appdata',
+    // to let user open files with our app on their drive's (i.e. 'open with' functionality)
+    // 'https://www.googleapis.com/auth/drive.install'
 ];
 
 var googleapis = require('googleapis');

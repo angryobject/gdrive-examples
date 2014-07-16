@@ -192,5 +192,9 @@
 
     <p>You can subscribe to push-notifications when a file changes. Read more about it <a href="https://developers.google.com/drive/v2/reference/changes/watch">here</a>. It requires some more steps like registering your domain on google webmasters panel, creating a new notification endpoint in gdc. As i understand, you can't do on the localhost.</p>
 
+    <h2>Installing your app</h2>
+
+    <p>Also, you can install your app on user's drive, so that they can open files with it. Your app will be displayed in 'open with' menu, and inside create new file dialog. You'll need a new permission 'https://www.googleapis.com/auth/drive.install'. Basically you should configure 'Open URL' option for the Drive SDK in your GDC. Whenever users open a file, they'll be redirected to this url. Some parameters will be passed along (like file id), the reset is your job =).</p>
+
 </body>
 </html>
