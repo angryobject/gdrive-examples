@@ -13,24 +13,28 @@ function upload(auth, meta, content, callback) {
         if (err) {
             callback(err);
         } else {
-            client.drive.files
+            var insert = client.drive.files
                 .insert(meta)
-                .withMedia(meta.mimeType, content)
-                .withAuthClient(auth)
-                .execute(callback);
+                .withAuthClient(auth);
+
+            if (content) {
+                insert.withMedia(meta.mimeType, content);
+            }
+
+            insert.execute(callback);
         }
     });
 
 }
 
-function list(auth, callback) {
+function list(auth, q, callback) {
 
     discover(function (err, client) {
         if (err) {
             callback(err);
         } else {
             client.drive.files
-                .list({q: 'trashed = false'})
+                .list({q: q || 'trashed = false'})
                 .withAuthClient(auth)
                 .execute(callback);
         }
@@ -194,6 +198,22 @@ function listProperties(auth, fid, callback) {
 
 }
 
+
+function folderContents(auth, fid, callback) {
+
+    discover(function (err, client) {
+        if (err) {
+            callback(err);
+        } else {
+            client.drive.children
+                .list({folderId: fid, q: 'trashed = false'})
+                .withAuthClient(auth)
+                .execute(callback);
+        }
+    });
+
+}
+
 module.exports.upload = upload;
 module.exports.list = list;
 module.exports.get = get;
@@ -205,3 +225,4 @@ module.exports.trash = trash;
 module.exports.untrash = untrash;
 module.exports.setProperty = setProperty;
 module.exports.listProperties = listProperties;
+module.exports.folderContents = folderContents;

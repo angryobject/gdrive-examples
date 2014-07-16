@@ -143,5 +143,44 @@
         <input type="submit" name="listProperties" value="List custom ptoperties">
     </form>
 
+    <h2>Create Folder</h2>
+
+    <form id="form-createFolder" action="/drive" method="POST">
+        <label>
+            Name:
+            <input type="text" name="fileName" value="My folder">
+        </label>
+        <input type="submit" name="createFolder" value="Create folder">
+    </form>
+
+    <h2>Move file to folder</h2>
+
+    <form id="form-moveFileToFolder" action="/folder" method="POST">
+        <label>
+            File Id:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Folder Id:
+            <input type="text" name="folderId">
+        </label>
+        <input type="submit" name="moveFileToFolder" value="Move">
+    </form>
+    <p>P.S. To save a new file into a folder just set its parents property. Same works when you need to create subfolders - just specify its parents. Remember, folders are just regular files.</p>
+
+    <h2>List contents of a folder</h2>
+
+    <form id="form-properties" action="/folder" method="GET">
+        <label>
+            Folder ID:
+            <input type="text" name="folderId">
+        </label>
+        <input type="submit" name="listFolder" value="Get files in folder">
+    </form>
+
+    <h2>List folders</h2>
+
+    <a href="/folder">List folders</a>
+
 </body>
 </html>

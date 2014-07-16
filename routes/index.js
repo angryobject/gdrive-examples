@@ -19,6 +19,10 @@ module.exports = function (app) {
             };
             var content = req.body.fileContent;
 
+            if (req.body.createFolder) {
+                meta.mimeType = 'application/vnd.google-apps.folder';
+            }
+
             gdrive.upload(auth, meta, content, function (err, result) {
                 if (err) {
                     res.end('Could not upload file.');
@@ -68,7 +72,7 @@ module.exports = function (app) {
         }
 
         function list(res, auth) {
-            gdrive.list(auth, function (err, result) {
+            gdrive.list(auth, null, function (err, result) {
                 if (err) {
                     res.end('Could not list files.');
                 } else {
@@ -218,6 +222,69 @@ module.exports = function (app) {
         } else {
             res.end('No fileId specified.');
         }
+
+    });
+
+    // move file to folder & list contents of folder
+    app.use('/folder', function (req, res) {
+
+        var folderId = req.body.folderId || req.query.folderId;
+        var fileId = req.body.fileId;
+
+        oauth.authenticate(req, res, function (err, res, auth) {
+            if (err) {
+                res.end('Could not authenticate.');
+            } else {
+                if (fileId && folderId) {
+                    // move file to folder
+                    var meta = {
+                        id: fileId,
+                        // File cat have multiple parents,
+                        // i.e. be in multiple folders
+                        parents: [{
+                            id: folderId
+                        }]
+                    };
+
+                    gdrive.update(auth, meta, null, function (err, result) {
+                        if (err) {
+                            res.end('Could not move the file.');
+                        } else {
+                            res.end(JSON.stringify(result, null, '\t'));
+                        }
+                    });
+                } else if(folderId) {
+                    // list folder contents
+
+                    // one way, but we get limited data back:
+                    // gdrive.folderContents(auth, folderId, function (err, result) {
+                    //     if (err) {
+                    //         res.end('Could get folder contents.');
+                    //     } else {
+                    //         res.end(JSON.stringify(result.items, null, '\t'));
+                    //     }
+                    // });
+
+                    // the other way via search query, get full metadata back
+                    gdrive.list(auth, '"' + folderId + '" in parents and trashed = false', function (err, result) {
+                        if (err) {
+                            res.end('Could not get folder contents.');
+                        } else {
+                            res.end(JSON.stringify(result.items, null, '\t'));
+                        }
+                    });
+                } else {
+                    // list folders
+                    gdrive.list(auth, 'mimeType = "application/vnd.google-apps.folder" and trashed = false', function (err, result) {
+                        if (err) {
+                            res.end('Could not get folder contents.');
+                        } else {
+                            res.end(JSON.stringify(result.items, null, '\t'));
+                        }
+                    });
+                }
+            }
+        });
 
     });
 
