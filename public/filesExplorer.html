@@ -182,5 +182,11 @@
 
     <a href="/folder">List folders</a>
 
+    <h2>On storing app-specific data</h2>
+
+    <p>If you want to store app-cpecific data that the user should not see (or rather you don't want them mess around on users drive) you should request access to scope 'https://www.googleapis.com/auth/drive.appdata' and srote your files in folder with the id of 'appdata', e.g. parents: [{id: 'appdata'}].</p>
+
+    <p>Accessing this appdata folder by its alias is slower than by the actual id, so you might want to get its full metadat once, e.g. gdrive.get(auth, 'appdata', cb), then store its actual id and use that in subsequent requests.</p>
+
 </body>
 </html>

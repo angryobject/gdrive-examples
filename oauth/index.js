@@ -4,7 +4,9 @@ var CLIENT_ID = process.env.CLIENT_ID;
 var CLIENT_SECRET = process.env.CLIENT_SECRET;
 var REDIRECT_URL = process.env.REDIRECT_URL;
 var SCOPES = [
-    'https://www.googleapis.com/auth/drive.file'
+    'https://www.googleapis.com/auth/drive.file',
+    // to store app-specific files that user should not see:
+    // 'https://www.googleapis.com/auth/drive.appdata'
 ];
 
 var googleapis = require('googleapis');
