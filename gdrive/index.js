@@ -155,27 +155,31 @@ module.exports.download = function download(auth, fid, cb) {
 
     this.get(auth, fid, function (err, meta) {
         if (err) { cb(err); } else {
-            var stream = request({
-                uri: meta.downloadUrl,
-                headers: {
-                    authorization: auth.credentials.token_type + ' ' + auth.credentials.access_token
-                }
-            });
+            if (meta.downloadUrl) {
+                var stream = request({
+                    uri: meta.downloadUrl,
+                    headers: {
+                        authorization: auth.credentials.token_type + ' ' + auth.credentials.access_token
+                    }
+                });
 
-            // return stream
-            cb(null, stream);
+                // return stream
+                cb(null, stream);
 
-            // or return Buffer:
-            // var chunks = [];
-            // stream.on('data', function (chunk) {
-            //     chunks.push(chunk);
-            // });
-            // stream.on('end', function () {
-            //     cb(null, new Buffer.concat(chunks));
-            // });
-            // stream.on('error', function (err) {
-            //     cb(err);
-            // });
+                // or return Buffer:
+                // var chunks = [];
+                // stream.on('data', function (chunk) {
+                //     chunks.push(chunk);
+                // });
+                // stream.on('end', function () {
+                //     cb(null, new Buffer.concat(chunks));
+                // });
+                // stream.on('error', function (err) {
+                //     cb(err);
+                // });
+            } else {
+                cb(new Error('Can\'t donwload file.'));
+            }
         }
     });
 

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Drive Examples - API Explorer (node.js)</title>
+    <style>
+        label {
+            display: block;
+            padding: 5px;
+            margin: 10px;
+        }
+        input, textarea, select {
+            display: block;
+        }
+        input[type="text"], textarea {
+            width: 350px;
+            max-width: 100%;
+        }
+        textarea {
+            min-height: 100px;
+        }
+        input[type="checkbox"] {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>API Explorer</h1>
+
+    <h2>List files</h2>
+
+    <form action="/drive" method="GET">
+        <label>
+            Query (could be empty):
+            <input type="text" name="q" value="trashed = false">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Create text file or folder</h2>
+
+    <form action="/drive/files" method="POST">
+        <label>
+            Name:
+            <input type="text" name="fileName" value="My file.txt">
+        </label>
+        <label>
+            Contents:
+            <textarea name="fileContent">Put in some text!</textarea>
+        </label>
+        <label>
+            It's a folder:
+            <input type="checkbox" name="isFolder">
+        </label>
+        <label>
+            File ID (to update a file, omit to create new one):
+            <input type="text" name="fileId">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Get file</h2>
+
+    <form action="/drive/files" method="GET">
+        <label>
+            File ID (omit to get all files):
+            <input type="text" name="fileId">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Remove file (or recover)</h2>
+
+    <form action="/drive/files/remove" method="POST">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Action:
+            <select name="action">
+                <option value="trash">trash</option>
+                <option value="untrash">untrash</option>
+                <option value="erase">erase</option>
+            </select>
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Move file to folder</h2>
+
+    <form action="/drive/folders/move" method="POST">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Folder ID:
+            <input type="text" name="folderId">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Contents of folder</h2>
+
+    <form action="/drive/folders" method="GET">
+        <label>
+            Folder ID (omit to list all folders instead):
+            <input type="text" name="folderId">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Add custom property to file (or update)</h2>
+
+    <form action="/drive/properties" method="POST">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Key:
+            <input type="text" name="key">
+        </label>
+        <label>
+            Value:
+            <input type="text" name="value">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Get property by key</h2>
+
+    <form action="/drive/properties" method="GET">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Key:
+            <input type="text" name="key">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>List properties</h2>
+
+    <form action="/drive/properties" method="GET">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Share file</h2>
+
+    <form  action="/drive/share" method="POST">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Type:
+            <select name="type">
+                <option value="user">user</option>
+                <option value="group">group</option>
+                <option value="domain">domain</option>
+                <option value="anyone">anyone</option>
+            </select>
+        </label>
+        <label>
+            Role:
+            <select name="role">
+                <option value="reader">reader</option>
+                <option value="writer">writer</option>
+                <option value="owner">owner</option>
+            </select>
+        </label>
+        <label>
+            Value(email/group email/blank for anyone):
+            <input type="text" name="value">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Download file</h2>
+
+    <form action="/drive/download" method="GET">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Storing app-specific data</h2>
+
+    <p>If you want to store app-cpecific data that the user should not see (or rather you don't want them to mess around on user's drive) you should request access to scope 'https://www.googleapis.com/auth/drive.appdata' and srote your files in folder with the id of 'appdata', e.g. parents: [{id: 'appdata'}].</p>
+
+    <p>Accessing this folder by its alias (i.e. 'appdata') is slower than by actual id, so you might want to get its full metadat once (e.g. gdrive.get(auth, 'appdata', cb)), then store its actual id and use that in subsequent requests.</p>
+
+    <h2>Watching files</h2>
+
+    <p>You can subscribe to push-notifications when a file changes. Read more about it <a href="https://developers.google.com/drive/v2/reference/changes/watch">here</a>. It requires some more involved steps like registering your domain on google webmasters panel, creating a new notification endpoint in GDC. As i understand, you can't do it on the localhost.</p>
+
+    <h2>Installing your app</h2>
+
+    <p>Also, you can install your app on user's drive, so that they can open files with it. Your app will be displayed in 'open with' menu, and inside create new file dialog. You'll need a new permission 'https://www.googleapis.com/auth/drive.install'. Basically you should configure 'Open URL' option for the Drive SDK in your GDC. Whenever users open a file, they'll be redirected to this url. Some parameters will be passed along (like the file id), the reset is your job =).</p>
+
+</body>
+</html>

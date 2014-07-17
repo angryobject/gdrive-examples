@@ -71,10 +71,10 @@ module.exports = function (app) {
         function update(res, auth) {
             var meta = {
                 id: req.body.fileId,
-                mimeType: 'text/plain',
-                title: req.body.fileName
+                mimeType: req.body.isFolder ? 'application/vnd.google-apps.folder' : 'text/plain',
+                title: req.body.fileName || null
             };
-            var content = req.body.fileContent;
+            var content = req.body.isFolder ? null : (req.body.fileContent || null);
 
             gdrive.update(auth, meta, content, function (err, result) {
                 if (err) {
@@ -88,9 +88,9 @@ module.exports = function (app) {
         function upload(res, auth) {
             var meta = {
                 title: req.body.fileName,
-                mimeType: 'text/plain'
+                mimeType: req.body.isFolder ? 'application/vnd.google-apps.folder' : 'text/plain',
             };
-            var content = req.body.fileContent;
+            var content = req.body.isFolder ? null : req.body.fileContent;
 
             gdrive.upload(auth, meta, content, function (err, result) {
                 if (err) {
