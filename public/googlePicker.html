@@ -1,180 +1,180 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Google Drive Examples - Google Picker</title>
-	<style>
-		label {
-			display: block;
-			padding: 5px;
-			margin: 10px;
-		}
-		input, textarea {
-			display: block;
-		}
-		input[type="text"], textarea {
-			width: 350px;
-			max-width: 100%;
-		}
-		textarea {
-			min-height: 100px;
-		}
-		#result {
-			margin-top: 20px;
-		}
-	</style>
+    <title>Google Drive Examples - Google Picker</title>
+    <style>
+        label {
+            display: block;
+            padding: 5px;
+            margin: 10px;
+        }
+        input, textarea {
+            display: block;
+        }
+        input[type="text"], textarea {
+            width: 350px;
+            max-width: 100%;
+        }
+        textarea {
+            min-height: 100px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
-	<h1>Google Picker</h1>
+    <h1>Google Picker</h1>
 
-	<form id="form">
-		<label>
-			ClientId:
-			<input type="text" name="clientId" id="clientId">
-		</label>
-		<label>
-			Developer Key:
-			<input type="text" name="developerKey" id="developerKey">
-		</label>
-		<label>
-			Scope (one per line):
-			<textarea name="scope" id="scope">https://www.googleapis.com/auth/drive</textarea>
-		</label>
-		<input type="submit" name="go" id="go" value="Go Pick a File" disabled>
-	</form>
+    <form id="form">
+        <label>
+            ClientId:
+            <input type="text" name="clientId" id="clientId">
+        </label>
+        <label>
+            Developer Key:
+            <input type="text" name="developerKey" id="developerKey">
+        </label>
+        <label>
+            Scope (one per line):
+            <textarea name="scope" id="scope">https://www.googleapis.com/auth/drive</textarea>
+        </label>
+        <input type="submit" name="go" id="go" value="Go Pick a File" disabled>
+    </form>
 
-	<div id="result"></div>
+    <div id="result"></div>
 
-	<script>
-		var form = document.querySelector('#form');
-		var clidentId = document.querySelector('#clientId');
-		var developerKey = document.querySelector('#developerKey');
-		var scope = document.querySelector('#scope');
-		var go = document.querySelector('#go');
-		var result = document.querySelector('#result');
+    <script>
+        var form = document.querySelector('#form');
+        var clidentId = document.querySelector('#clientId');
+        var developerKey = document.querySelector('#developerKey');
+        var scope = document.querySelector('#scope');
+        var go = document.querySelector('#go');
+        var result = document.querySelector('#result');
 
-		function onApiLoad() {
+        function onApiLoad() {
 
-			loadApis(function () {
-				go.disabled = false;
-				form.addEventListener('submit', onSubmit);
-				scope.addEventListener('input', onScopeChange);
-			})
+            loadApis(function () {
+                go.disabled = false;
+                form.addEventListener('submit', onSubmit);
+                scope.addEventListener('input', onScopeChange);
+            });
 
-		}
+        }
 
-		function loadApis(callback) {
+        function loadApis(callback) {
 
-			var authApiLoaded = false;
-			var pickerApiLoaded = false;
+            var authApiLoaded = false;
+            var pickerApiLoaded = false;
 
-			function check() {
-				if (authApiLoaded && pickerApiLoaded) {
-					callback();
-				}
-			}
+            function check() {
+                if (authApiLoaded && pickerApiLoaded) {
+                    callback();
+                }
+            }
 
-			gapi.load('auth', {
-				callback: function () {
-					authApiLoaded = true;
-					check();
-				}
-			});
+            gapi.load('auth', {
+                callback: function () {
+                    authApiLoaded = true;
+                    check();
+                }
+            });
 
-			gapi.load('picker', {
-				callback: function () {
-					pickerApiLoaded = true;
-					check();
-				}
-			});
+            gapi.load('picker', {
+                callback: function () {
+                    pickerApiLoaded = true;
+                    check();
+                }
+            });
 
-		}
+        }
 
-		function onSubmit(e) {
+        function onSubmit(e) {
 
-			e.preventDefault();
+            e.preventDefault();
 
-			authorize(function (err, oauthToken) {
-				if (err) {
-					window.alert('Could not authorize.')
-				} else {
-					createPicker(oauthToken);
-				}
-			});
+            authorize(function (err, oauthToken) {
+                if (err) {
+                    window.alert('Could not authorize.')
+                } else {
+                    createPicker(oauthToken);
+                }
+            });
 
-		}
+        }
 
-		function onScopeChange() {
+        function onScopeChange() {
 
-			authorize.oauthToken = null;
+            authorize.oauthToken = null;
 
-		}
+        }
 
-		function authorize(callback) {
+        function authorize(callback) {
 
-			if (authorize.oauthToken) {
-				callback(null, authorize.oauthToken);
-			} else {
-				gapi.auth.authorize({
-	              'client_id': clientId.value,
-	              'scope': scope.value.trim().split('\n'),
-	              'immediate': false
-	            }, function (authResult) {
-	            	if (authResult && !authResult.error) {
-						authorize.oauthToken = authResult.access_token;
-						callback(null, authorize.oauthToken);
-					} else {
-						callback(authResult.error)
-					}
-	            });
-			}
+            if (authorize.oauthToken) {
+                callback(null, authorize.oauthToken);
+            } else {
+                gapi.auth.authorize({
+                  'client_id': clientId.value,
+                  'scope': scope.value.trim().split('\n'),
+                  'immediate': false
+                }, function (authResult) {
+                    if (authResult && !authResult.error) {
+                        authorize.oauthToken = authResult.access_token;
+                        callback(null, authorize.oauthToken);
+                    } else {
+                        callback(authResult.error)
+                    }
+                });
+            }
 
-		}
+        }
 
-		function createPicker(oauthToken) {
+        function createPicker(oauthToken) {
 
-			if (!oauthToken) { return; }
+            if (!oauthToken) { return; }
 
-			var picker = new google.picker.PickerBuilder()
-				.setOAuthToken(oauthToken)
-				.setDeveloperKey(developerKey.value)
-				.setCallback(pickerCallback)
-				.addView(new google.picker.DocsView())
-				.addView(new google.picker.DocsUploadView())
-				.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-				.build();
+            var picker = new google.picker.PickerBuilder()
+                .setOAuthToken(oauthToken)
+                .setDeveloperKey(developerKey.value)
+                .setCallback(pickerCallback)
+                .addView(new google.picker.DocsView())
+                .addView(new google.picker.DocsUploadView())
+                .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+                .build();
 
-			picker.setVisible(true);
+            picker.setVisible(true);
 
-		}
+        }
 
-		function pickerCallback(data) {
+        function pickerCallback(data) {
 
-			var status = '';
-			var i, l;
+            var status = '';
+            var i, l;
 
-			if (data.action === google.picker.Action.PICKED) {
-				i = 0;
-				l = data.docs.length;
+            if (data.action === google.picker.Action.PICKED) {
+                i = 0;
+                l = data.docs.length;
 
-				status = 'You selected ' + l + ' files.<br>';
-				status += '<ul>'
+                status = 'You selected ' + l + ' files.<br>';
+                status += '<ul>';
 
-				for ( ; i < l; i += 1) {
-					status += '<li>'
-					status += 'FileId: ' + data.docs[i].id + '. ';
-					status += '<a href="' + data.docs[i].url + '">File URL.<a>';
-					status += '</li>';
-				}
-			} else {
-				status = 'You did not select any files.';
-			}
+                for ( ; i < l; i += 1) {
+                    status += '<li>';
+                    status += 'FileId: ' + data.docs[i].id + '. ';
+                    status += '<a href="' + data.docs[i].url + '">File URL.<a>';
+                    status += '</li>';
+                }
+            } else {
+                status = 'You did not select any files.';
+            }
 
-			result.innerHTML = status;
+            result.innerHTML = status;
 
-		}
-	</script>
+        }
+    </script>
 
-	<script src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+    <script src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
 </body>
 </html>
