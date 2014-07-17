@@ -1,5 +1,8 @@
 'use strict';
 
+var url = require('url');
+var qs = require('qs');
+
 var CLIENT_ID = process.env.CLIENT_ID;
 var CLIENT_SECRET = process.env.CLIENT_SECRET;
 var REDIRECT_URL = process.env.REDIRECT_URL;
@@ -29,7 +32,12 @@ function authenticate(req, res, callback) {
         callback(new Error('Authentication error.'), res);
     } else if (!session._credentials) {
         uid = cuid();
-        session._authRedirect = req.originalUrl + '?authcbid=' + uid;
+
+        var urlParts = url.parse(req.originalUrl);
+        var query = qs.parse(urlParts.query);
+
+        query.authcbid = uid;
+        session._authRedirect = urlParts.pathname + '?' + qs.stringify(query);
 
         pageCallbacks[uid] = {
             sessionId: req.sessionID,
@@ -89,7 +97,7 @@ function authPageCallback(req, res, next) {
 
 module.exports.route = function route(app) {
 
-    app.use(require('url').parse(REDIRECT_URL).path, authResultCallback);
+    app.use(url.parse(REDIRECT_URL).path, authResultCallback);
 
 };
 
