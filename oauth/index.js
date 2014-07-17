@@ -5,8 +5,10 @@ var CLIENT_SECRET = process.env.CLIENT_SECRET;
 var REDIRECT_URL = process.env.REDIRECT_URL;
 var SCOPES = [
     'https://www.googleapis.com/auth/drive.file',
+
     // to store app-specific files that user should not see:
     // 'https://www.googleapis.com/auth/drive.appdata',
+
     // to let user open files with our app on their drive's (i.e. 'open with' functionality)
     // 'https://www.googleapis.com/auth/drive.install'
 ];
@@ -14,7 +16,6 @@ var SCOPES = [
 var googleapis = require('googleapis');
 var auth = new googleapis.OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 var cuid = require('cuid');
-
 var pageCallbacks = {};
 
 function authenticate(req, res, callback) {
@@ -37,7 +38,7 @@ function authenticate(req, res, callback) {
         };
 
         res.redirect(auth.generateAuthUrl({
-          scope: SCOPES.join(" ")
+          scope: SCOPES.join(' ')
         }));
     } else {
         auth.credentials = session._credentials;
@@ -46,7 +47,7 @@ function authenticate(req, res, callback) {
 
 }
 
-function authResultCallback(req, res, next) {
+function authResultCallback(req, res) {
 
     var session = req.session;
     var redirect = session._authRedirect || '/';
@@ -86,13 +87,13 @@ function authPageCallback(req, res, next) {
 
 }
 
-module.exports.route = function (app) {
+module.exports.route = function route(app) {
 
     app.use(require('url').parse(REDIRECT_URL).path, authResultCallback);
 
 };
 
-module.exports.middleware = function () {
+module.exports.middleware = function middleware() {
 
     return authPageCallback;
 
