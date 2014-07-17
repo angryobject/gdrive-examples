@@ -133,6 +133,20 @@
         <input type="submit" name="addProperty" value="Add custom ptoperty">
     </form>
 
+    <h2>Get property</h2>
+
+    <form id="form-properties" action="/properties" method="GET">
+        <label>
+            File ID:
+            <input type="text" name="fileId">
+        </label>
+        <label>
+            Key:
+            <input type="text" name="key">
+        </label>
+        <input type="submit" value="Get custom ptoperty">
+    </form>
+
     <h2>List custom properties on a file</h2>
 
     <form id="form-properties" action="/properties" method="GET">

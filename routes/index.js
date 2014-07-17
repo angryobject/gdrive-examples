@@ -205,6 +205,16 @@ module.exports = function (app) {
             });
         }
 
+        function get(res, auth) {
+            gdrive.getProperty(auth, fid, req.query.key, function (err, result) {
+                if (err) {
+                    res.end('Could not get custom property.');
+                } else {
+                    res.end(JSON.stringify(result, null, '\t'));
+                }
+            });
+        }
+
         var fid = req.query.fileId || req.body.fileId;
 
         if (fid) {
@@ -215,7 +225,11 @@ module.exports = function (app) {
                     if (req.method === 'POST') {
                         set(res, auth);
                     } else {
-                        list(res, auth);
+                        if (req.query.key) {
+                            get(res, auth);
+                        } else {
+                            list(res, auth);
+                        }
                     }
                 }
             });
@@ -257,7 +271,7 @@ module.exports = function (app) {
                     // list folder contents
 
                     // one way, but we get limited data back:
-                    // gdrive.folderContents(auth, folderId, function (err, result) {
+                    // gdrive.folderContents(auth, folderId, null, function (err, result) {
                     //     if (err) {
                     //         res.end('Could get folder contents.');
                     //     } else {
